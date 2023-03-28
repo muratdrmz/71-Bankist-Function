@@ -59,8 +59,117 @@ const inputLoanAmount = document.querySelector(".form__input--loan-amount");
 const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
 
+// 1=Display movemenets
+const displayMovements=function(movements){
+  containerMovements.innerHTML='';
+  movements.forEach((mov,i) => {
+    const type=mov>0?'deposit':'withdrawal'
+    const html = `
+  <div class="movements__row">
+    <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
+    <div class="movements__value">${mov}</div>
+   </div>`; 
+   containerMovements.insertAdjacentHTML("afterbegin", html);   
+  });  
+}
+displayMovements(account1.movements)
+// 2=Balance calculation
+
+// const calcPrintBalance=function(accs){
+// accs.forEach((acc)=>{
+//   acc.balance=acc.movements.reduce((acc,cur)=>acc+cur,0);
+//   labelBalance.textContent=accounts[0].balance
+// })
+// }
+// calcPrintBalance(accounts)
+// console.log(account1);
+
+
+const calcDisplayBalance=function(movements){
+  const balance=movements.reduce((acc,mov)=>acc+mov,0);
+  labelBalance.textContent=`${balance} EUR`
+}
+calcDisplayBalance(account1.movements)
+
+
+
+// 3=create user names
+const createUsernames=function(accs){
+  accs.forEach((acc) => {
+    acc.username = acc.owner
+      .toLowerCase()
+      .split(" ")
+      .map((name) => name[0])
+      .join("");
+    
+  });
+};
+createUsernames(accounts);
+
+
 /////////////////////////////////////////////////
 // Functions
+
+// const movements= [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+// REDUCE METHOD
+
+// const balance=movements.reduce(function(acc,cur,i,arr){
+//   console.log(`iteration ${i}:${acc}`);
+// return acc+cur
+
+// },0);
+
+// const balance=movements.reduce((acc,cur)=>acc+cur,0)
+// console.log(balance);
+
+// let sum=0;
+// for (const mov of movements){
+//   sum+=mov
+// }
+// console.log(sum);
+
+// filter METHOD
+
+// const deposit=movements.filter(function(mov){
+//   return mov>0
+//   // mov=>mov>0
+// })
+// const deposit=movements.filter(mov=>mov>0)
+
+// const dep=[];
+// for(const mov of movements){
+//   if(mov>0){dep.push(mov)}
+//   } 
+
+// console.log(movements);
+// console.log(deposit);
+// console.log(dep);
+
+// const euroToUsd = 1.1;
+// const movementsUsd = account1.movements.map(mov => mov * euroToUsd);
+// console.log(movements);
+// console.log(movementsUsd);
+
+// const movUsd = [];
+// for (const mov of movements) {
+//   movUsd.push(mov * euroToUsd);
+// }
+// console.log(movUsd);
+
+// const movDesc=movements.map((mov,i)=>
+//   // const type=mov>0?'deposit':'withdrawal'
+//   // if(mov>0){
+//   //   return `Movement ${i+1}: You ${type} ${mov} `
+//   // }else{
+//   //   return `Movement ${i+1}: You ${type} ${Math.abs(mov)}`
+//   // }
+//   `Movement ${i + 1}: You ${
+//     mov > 0 ? "deposit" : "withdrawal"
+//   } ${Math.abs(mov)}`
+// )
+
+// console.log(movDesc);
 
 // let arr=['a','b','c','d','e']
 
