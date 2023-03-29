@@ -67,12 +67,12 @@ const displayMovements=function(movements){
     const html = `
   <div class="movements__row">
     <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
-    <div class="movements__value">${mov}</div>
+    <div class="movements__value">${mov}€</div>
    </div>`; 
    containerMovements.insertAdjacentHTML("afterbegin", html);   
   });  
 }
-displayMovements(account1.movements)
+
 // 2=Balance calculation
 
 // const calcPrintBalance=function(accs){
@@ -83,15 +83,38 @@ displayMovements(account1.movements)
 // }
 // calcPrintBalance(accounts)
 // console.log(account1);
-
-
-const calcDisplayBalance=function(movements){
-  const balance=movements.reduce((acc,mov)=>acc+mov,0);
-  labelBalance.textContent=`${balance} EUR`
+const calcDisplayBalance=function(acc){
+  acc.balance=acc.movements.reduce((acc,mov)=>acc+mov,0);
+  labelBalance.textContent = `${acc.balance}€`;
 }
-calcDisplayBalance(account1.movements)
 
 
+// display summary calculation
+const calcDisplaySummary=function(acc){
+  const incomes=acc.movements
+  .filter(mov=>mov>0)
+  .reduce((acc,mov)=>acc+mov,0)
+  labelSumIn.textContent = `${incomes}€`;
+
+  const out=acc.movements
+  .filter(mov=>mov<0)
+  .reduce((acc,cur)=>acc+cur,0)
+  labelSumOut.textContent = `${Math.abs(out)}€`;
+
+  // const interest=movements
+  // .filter(mov=>mov>0) 
+  // .reduce((acc,mov)=>acc+mov,0)*account1.interestRate/100
+  
+  const interest=acc.movements
+  .filter(mov=>mov>0)
+  .map(mov=>mov*acc.interestRate/100)
+  .filter((mov,i,arr)=>{
+    // console.log(mov,arr,i)
+    return mov>=1
+  })
+  .reduce((acc,mov)=>acc+mov,0);
+  labelSumInterest.textContent = `${interest}€`;
+ }
 
 // 3=create user names
 const createUsernames=function(accs){
@@ -106,13 +129,106 @@ const createUsernames=function(accs){
 };
 createUsernames(accounts);
 
+// update UI
+const updateUI = function (acc) {
+  // Display movements
+  displayMovements(acc.movements);
+  // display balance
+  calcDisplayBalance(acc);
+  // display summary
+  calcDisplaySummary(acc);
+};
+
+// Event handler
+// login
+let currentAccount;
+
+btnLogin.addEventListener('click',function(e){
+e.preventDefault();
+currentAccount=accounts
+.find(acc=>acc.username===inputLoginUsername.value)
+
+if(currentAccount?.pin===Number(inputLoginPin.value)){
+//  display Ui and message
+labelWelcome.textContent=`Welcome Back ${currentAccount.owner.split(' ')[0]}`
+containerApp.style.opacity=100;
+// clear input fields
+inputLoginUsername.value=inputLoginPin.value='';
+inputLoginPin.blur();
+
+// UPDATE UI
+updateUI(currentAccount)
+}
+})
+
+// transfer money
+
+btnTransfer.addEventListener('click',function(e){
+  e.preventDefault();
+  const amount=Number(inputTransferAmount.value);
+  const receiverAcc=accounts.find(acc=>acc.username===inputTransferTo.value);
+ 
+  inputTransferAmount.value=inputTransferTo.value='';
+  if(amount>0 &&
+    receiverAcc&&
+    currentAccount.balance>=amount &&
+    receiverAcc?.username!==currentAccount.username){
+      currentAccount.movements.push(-amount);
+      receiverAcc.movements.push(amount);
+      // UPDATE UI
+      updateUI(currentAccount);
+    }else {
+     alert('Transaction is not valid')
+    }
+})
 
 /////////////////////////////////////////////////
-// Functions
+// STUDY
 
+// const euroToUsd=1.1;
 // const movements= [200, 450, -400, 3000, -650, -130, 70, 1300];
 
+// find method  ilki doner array yapmaz
+// const firstW=movements.find(mov=>mov<0)
+// console.log(firstW);
+
+// const account = accounts.find((acc) => acc.owner === 'Jessica Davis');
+
+// let customer=[];
+// for( const account of accounts){
+//   if(account.owner === "Jessica Davis"){
+//     customer=account
+//   };
+// }
+// console.log(customer);
+
+// // chain methods
+// const totalDepUsd=movements
+// .filter(mov=>mov>0)
+// .map((mov,i,arr)=>{
+//   console.log(arr,i);
+//   return mov*euroToUsd
+// })
+// // .map(mov=>mov*euroToUsd)
+// .reduce((acc,mov)=>acc+mov,0)
+
+// console.log(totalDepUsd);
+
 // REDUCE METHOD
+
+// max value
+// const max1=movements.reduce((acc,mov)=>{
+//   if(acc>mov){
+//     return acc
+//   }else{
+//     return mov
+//   }
+// },movements[0])
+// console.log(max1);
+// const max=movements.reduce((acc,mov)=>acc>mov?acc:mov)
+// console.log(max);
+
+
 
 // const balance=movements.reduce(function(acc,cur,i,arr){
 //   console.log(`iteration ${i}:${acc}`);
