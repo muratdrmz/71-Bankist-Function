@@ -180,13 +180,90 @@ btnTransfer.addEventListener('click',function(e){
     }else {
      alert('Transaction is not valid')
     }
+});
+
+// LOAN
+
+btnLoan.addEventListener('click',function(e){
+  e.preventDefault();
+  const amount=Number(inputLoanAmount.value);
+  if(amount>0 &&
+    currentAccount.movements.some(mov=>mov>=amount*0.1)){
+    currentAccount.movements.push(amount);
+
+    // update UI
+    updateUI(currentAccount)
+  }else{
+    alert("Amount is too much");
+  }
+  inputLoanAmount.value='';
+})
+
+// close account
+
+btnClose.addEventListener('click',function(e){
+  e.preventDefault();
+  
+  if(currentAccount.username===inputCloseUsername.value&&
+     currentAccount.pin===Number(inputClosePin.value)){
+      const index=accounts.
+      findIndex(acc=>acc.username===currentAccount.username)
+      
+      // delete account
+      accounts.splice(index,1);
+      // hide UI
+      containerApp.style.opacity=0;
+     }
+     inputCloseUsername.value = inputClosePin.value = "";
 })
 
 /////////////////////////////////////////////////
 // STUDY
 
+
+
 // const euroToUsd=1.1;
 // const movements= [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+// FLAT METHOD
+
+// const arr=[[1,2,3],[4,5,6],7,8]
+// const arrDeep = [[[1, 2], 3], [4, [5, 6]], 7, 8];
+
+// console.log(arr.flat());
+// console.log(arrDeep.flat());
+// console.log(arrDeep.flat(2));
+
+// const accMov=accounts.map(acc=>acc.movements)
+// console.log(accMov);
+// console.log(accMov.flat());
+// console.log(accMov.flat().reduce((acc, cur) => acc + cur, 0));
+
+// const overalBalance=accounts
+// .map(acc=>acc.movements)
+// .flat()
+// .reduce((acc,cur)=>acc+cur,0)
+// console.log(overalBalance);
+
+// const overAll=accounts
+// .flatMap(acc=>acc.movements)
+// .reduce((acc,cur)=>acc+cur,0);
+
+// console.log(overAll);
+
+// EVERY METHOD
+
+// console.log(movements.every((mov) => mov > 0));
+// console.log(account4.movements.every((mov) => mov > 0));
+// const deposit=mov=>mov>0;
+// console.log(movements.some(deposit));
+
+
+// some method
+// quality checks
+// console.log(movements.includes(200));
+// // condition checks
+// console.log(movements.some(mov=>mov>0));
 
 // find method  ilki doner array yapmaz
 // const firstW=movements.find(mov=>mov<0)
