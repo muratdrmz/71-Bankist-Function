@@ -60,9 +60,15 @@ const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
 
 // 1=Display movemenets
-const displayMovements=function(movements){
+const displayMovements=function(movements,sort=false){
+
   containerMovements.innerHTML='';
-  movements.forEach((mov,i) => {
+
+  // sort
+  const movs=sort?movements.slice().sort((a,b)=>a-b):movements
+
+
+  movs.forEach((mov,i) => {
     const type=mov>0?'deposit':'withdrawal'
     const html = `
   <div class="movements__row">
@@ -217,9 +223,70 @@ btnClose.addEventListener('click',function(e){
      inputCloseUsername.value = inputClosePin.value = "";
 })
 
+// SORTING
+let sorted=false;
+btnSort.addEventListener('click',function(e){
+  e.preventDefault();
+  displayMovements(currentAccount.movements,!sorted);
+  sorted=!sorted
+})
+
 /////////////////////////////////////////////////
 // STUDY
 
+// FILL METHOD
+
+// const arr=[1,2,3,4,5,6,7];
+// console.log(arr);
+// console.log(new Array(1,2,3,4,5,6,7));
+// const x=new Array(7)
+// console.log(x);
+// x.fill(1, 3,5)
+
+// console.log(x);
+// arr.fill(23, 4,6)
+// console.log(arr);
+
+// // Array.from
+// const y=Array.from({length:7},(_,i)=>i+1)
+
+// console.log(y);
+
+// const k=Array.from({length:100},(curr,i)=>Math.trunc(Math.random()*6+1))
+
+// console.log(k);
+
+// labelBalance.addEventListener('click',function(){
+
+//   const movemenetsUI=Array.from(document.querySelectorAll('.movements__value'),(el) => Number(el.textContent.replace("€", "")));
+//   // const moves = movemenetsUI.map((el) => Number(el.textContent.replace("€", "")));
+
+//   const movemenetsUI2=[...document.querySelectorAll('.movements__value')]
+
+//   console.log(movemenetsUI.reduce((acc, cur) => acc + cur, 0));
+//   console.log(movemenetsUI2);
+// })
+// SORTING
+
+// ascending
+// account1.movements.sort((a,b)=>{
+//   // if(a>b) return 1
+//   // if(a<b) return -1
+//   a-b
+// })
+// account1.movements.sort((a, b) => b - a);
+
+// console.log(account1.movements);
+
+
+// // descending
+// // account1.movements.sort((a, b) => {
+// //   // if (a > b) return -1;
+// //   // if (a < b) return 1;
+
+// // });
+// account1.movements.sort((a,b)=>a-b)
+// console.log(account1.movements);
 
 
 // const euroToUsd=1.1;
